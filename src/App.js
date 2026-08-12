@@ -4,6 +4,10 @@ function App() {
   const [playersList, setPlayersList] = useState([]);
 
   function handleAddPlayer(playerName) {
+    if (playersList.includes(playerName)) {
+      alert("Player already added");
+      return;
+    }
     setPlayersList((list) => [...list, playerName]);
     console.log(playersList);
   }
@@ -12,7 +16,7 @@ function App() {
     setPlayersList((players) =>
       players.filter((player) => player !== playerName),
     );
-    console.log(playersList)
+    console.log(playersList);
   }
 
   return (
@@ -63,7 +67,7 @@ function PlayerDisplay({ players, onDeletePlayer }) {
 function PlayerTag({ name, onDeletePlayer }) {
   return (
     <div className="w-fit flex gap-2 px-1 bg-green-100 h-fit py-1 border-green-300 rounded-sm border-1">
-      <span>{name}</span>
+      <span>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
       <button onClick={() => onDeletePlayer(name)}>❌</button>
     </div>
   );
@@ -73,8 +77,13 @@ function PlayerInput({ onAddPlayer }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!playerName) return;
-    onAddPlayer(playerName);
+    const name = playerName.trim().split(" ")[0].toLowerCase();
+
+    if (!name) {
+      alert("Please enter a valid name");
+      return;
+    }
+    onAddPlayer(name);
     console.log(playerName);
     setPlayerName("");
   }
