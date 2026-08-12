@@ -7,6 +7,14 @@ function App() {
     setPlayersList((list) => [...list, playerName]);
     console.log(playersList);
   }
+
+  function handleDeletePlayer(playerName) {
+    setPlayersList((players) =>
+      players.filter((player) => player !== playerName),
+    );
+    console.log(playersList)
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-white">
@@ -14,7 +22,10 @@ function App() {
         <Header />
         {/* Content */}
         <main className="flex-1 px-5 py-6">
-          <PlayerDisplay players={playersList} />
+          <PlayerDisplay
+            players={playersList}
+            onDeletePlayer={handleDeletePlayer}
+          />
           <PlayerInput onAddPlayer={handleAddPlayer} />
         </main>
 
@@ -39,19 +50,21 @@ function Header() {
   );
 }
 
-function PlayerDisplay({players}) {
+function PlayerDisplay({ players, onDeletePlayer }) {
   return (
     <div className="border h-fit min-h-[100px] flex flex-wrap gap-2  p-1 rounded-sm bg-blue-100/20">
-      {players.map((player)=> <PlayerTag name={player}/>)}
+      {players.map((player) => (
+        <PlayerTag name={player} key={player} onDeletePlayer={onDeletePlayer} />
+      ))}
     </div>
   );
 }
 
-function PlayerTag({name}) {
+function PlayerTag({ name, onDeletePlayer }) {
   return (
-    <div className="w-fit px-1 bg-green-100 h-fit py-1 border-green-300 rounded-sm border-1">
+    <div className="w-fit flex gap-2 px-1 bg-green-100 h-fit py-1 border-green-300 rounded-sm border-1">
       <span>{name}</span>
-      <button>❌</button>
+      <button onClick={() => onDeletePlayer(name)}>❌</button>
     </div>
   );
 }
