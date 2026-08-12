@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function App() {
   const [playersList, setPlayersList] = useState([]);
+  const [currentPage, setCurrentPage] = useState("players");
 
   function handleAddPlayer(playerName) {
     if (playersList.includes(playerName)) {
@@ -26,19 +27,37 @@ function App() {
         <Header />
         {/* Content */}
         <main className="flex-1 px-5 py-6">
-          <PlayerDisplay
-            players={playersList}
-            onDeletePlayer={handleDeletePlayer}
-          />
-          <PlayerInput onAddPlayer={handleAddPlayer} />
+          {currentPage === "players" && (
+            <>
+              <PlayerDisplay
+                players={playersList}
+                onDeletePlayer={handleDeletePlayer}
+              />
+              <PlayerInput onAddPlayer={handleAddPlayer} />
+            </>
+          )}
+          {currentPage === "order" && (
+            <>
+              <h3 className="font-semibold text-center text-lg">
+                Playing Order 🎱
+              </h3>
+              <PlayingOrder players={playersList} />
+            </>
+          )}
         </main>
 
         {/* Bottom navigation */}
         <nav className="border-t border-gray-100 bg-white px-5 py-3">
           <div className="flex items-center justify-around">
+            {currentPage === "players" && (
+              <button
+                className="text-sm font-medium text-black"
+                onClick={() => setCurrentPage("order")}
+              >
+                Next
+              </button>
+            )}
             {/* <button className="text-sm font-medium text-black">Home</button> */}
-
-            <button className="text-sm font-medium text-black">Next</button>
           </div>
         </nav>
       </div>
@@ -51,6 +70,69 @@ function Header() {
     <header className="border-b border-gray-100 px-5 py-4">
       <h1 className="text-xl font-semibold text-gray-900">Snooker Ug</h1>
     </header>
+  );
+}
+
+function PlayingOrder({ players }) {
+  const [playerOrder, setPlayerOrder] = useState(players);
+  const defaultOrder = players;
+
+  //Fisher-Yates shuffle
+  function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+  }
+
+  function shufflePlayers() {
+    let players = playerOrder;
+    let newOrder = shuffleArray(players);
+    setPlayerOrder((prev) => newOrder);
+  }
+
+  function restoreOrder() {
+    setPlayerOrder((prev) => defaultOrder);
+  }
+
+  return (
+    <>
+      <ul className=" w-fit mx-auto">
+        {playerOrder.map((player, index) => (
+          <li className="text-lg mt-2 bg-pink-200 rounded-sm px-2 py-1">
+            {index + 1}. {player.charAt(0).toUpperCase() + player.slice(1)}
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-col items-center w-full">
+        <button
+          onClick={shufflePlayers}
+          className="mt-10 bg-blue-500 px-2 py-1 round-sm  w-32 text-white"
+        >
+          Shuffle Players
+        </button>
+        <button
+          disabled={
+            playerOrder.length === defaultOrder.length &&
+            playerOrder.every((value, index) => value === defaultOrder[index])
+          }
+          onClick={restoreOrder}
+          className={`${
+            playerOrder.length === defaultOrder.length &&
+            playerOrder.every((value, index) => value === defaultOrder[index])
+              ? "bg-green-200"
+              : "bg-green-500"
+          } mt-5 px-2 py-1 round-sm  w-32 text-white`}
+        >
+          Default Order
+        </button>
+      </div>
+    </>
   );
 }
 
