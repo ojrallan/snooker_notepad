@@ -44,6 +44,11 @@ function App() {
               <PlayingOrder players={playersList} />
             </>
           )}
+          {currentPage === "game" && (
+            <>
+              <GameGrid />
+            </>
+          )}
         </main>
 
         {/* Bottom navigation */}
@@ -57,10 +62,56 @@ function App() {
                 Next
               </button>
             )}
+
+            {currentPage === "order" && (
+              <button
+                className="text-sm font-medium text-black"
+                onClick={() => setCurrentPage("game")}
+              >
+                Start Game
+              </button>
+            )}
             {/* <button className="text-sm font-medium text-black">Home</button> */}
           </div>
         </nav>
       </div>
+    </div>
+  );
+}
+
+function GameGrid() {
+  const [alt, setAlt] = useState(false);
+
+  const balls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+  function handleAlt() {
+    setAlt((prev) => !prev);
+    console.log(alt);
+  }
+  return (
+    <div className="grid grid-cols-3 gap-2 mx-auto w-[80%]">
+      {balls.map((ballValue) =>
+        alt ? (
+          <SnookerBall number={-ballValue} key={-ballValue} />
+        ) : (
+          <SnookerBall number={ballValue} key={ballValue} />
+        ),
+      )}
+
+      <div
+        className="flex items-center justify-center cursor-pointer mx-auto bg-green-500 w-20 h-20 rounded-full text-white"
+        onClick={handleAlt}
+      >
+        Alt
+      </div>
+    </div>
+  );
+}
+
+function SnookerBall({ number }) {
+  return (
+    <div className="h-20 w-20 bg-blue-500 flex justify-center items-center text-3xl text-white rounded-full">
+      {number}
     </div>
   );
 }
