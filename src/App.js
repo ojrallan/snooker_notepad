@@ -1,4 +1,21 @@
 import { useState } from "react";
+const initialBalls = [
+  { ballValue: 1, disabled: false },
+  { ballValue: 2, disabled: false },
+  { ballValue: 3, disabled: false },
+  { ballValue: 4, disabled: false },
+  { ballValue: 5, disabled: false },
+  { ballValue: 6, disabled: false },
+  { ballValue: 7, disabled: false },
+  { ballValue: 8, disabled: false },
+  { ballValue: 9, disabled: false },
+  { ballValue: 10, disabled: false },
+  { ballValue: 11, disabled: false },
+  { ballValue: 12, disabled: false },
+  { ballValue: 13, disabled: false },
+  { ballValue: 14, disabled: false },
+  { ballValue: 15, disabled: false },
+];
 
 function App() {
   const [playersList, setPlayersList] = useState([]);
@@ -82,7 +99,19 @@ function App() {
 function GameGrid() {
   const [alt, setAlt] = useState(false);
 
-  const balls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const [balls, setBalls] = useState(initialBalls);
+
+  function handleDisableBall(number) {
+    console.log("disable ball reached");
+    setBalls((balls) =>
+      balls.map((ball) =>
+        ball.ballValue === number ? { ...ball, disabled: true } : ball,
+      ),
+    );
+
+    console.log("disable ball completed");
+    console.log(balls);
+  }
 
   function handleAlt() {
     setAlt((prev) => !prev);
@@ -90,13 +119,15 @@ function GameGrid() {
   }
   return (
     <div className="grid grid-cols-3 gap-2 mx-auto w-[80%]">
-      {balls.map((ballValue) =>
-        alt ? (
-          <SnookerBall number={-ballValue} key={-ballValue} />
-        ) : (
-          <SnookerBall number={ballValue} key={ballValue} />
-        ),
-      )}
+      {balls.map((ball) => (
+        <SnookerBall
+          onDisableBall={handleDisableBall}
+          number={ball.ballValue}
+          key={crypto.randomUUID()}
+          disabled={ball.disabled}
+          alt={alt}
+        />
+      ))}
 
       <div
         className="flex items-center justify-center cursor-pointer mx-auto bg-green-500 w-20 h-20 rounded-full text-white"
@@ -108,11 +139,21 @@ function GameGrid() {
   );
 }
 
-function SnookerBall({ number }) {
+function SnookerBall({ balls, disabled, alt, number, onDisableBall }) {
+  function handleClick() {
+    if (alt) return;
+
+    onDisableBall(number);
+  }
+
   return (
-    <div className="h-20 w-20 bg-blue-500 flex justify-center items-center text-3xl text-white rounded-full">
-      {number}
-    </div>
+    <input
+      value={alt ? -number : number}
+      disabled={disabled}
+      readOnly
+      onClick={handleClick}
+      className={`h-20 w-20 bg-blue-500 ${disabled ? "bg-blue-200" : ""} text-center cursor-pointer text-3xl text-white rounded-full`}
+    />
   );
 }
 
