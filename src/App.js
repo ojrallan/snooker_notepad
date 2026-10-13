@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 const initialBalls = [
   { ballValue: 1, disabled: false },
   { ballValue: 2, disabled: false },
@@ -21,16 +22,37 @@ function App() {
   const [playersList, setPlayersList] = useState([]);
   const [currentPage, setCurrentPage] = useState("players");
 
-  const playerObjects = playersList.map((player) => ({
-    name: player,
-    scores: [],
-  }));
-
-  // const [playerObjects, setPlayerObjects] = useState(
-  //   playersList.map((player) => ({ name: player, scores: [] })),
-  // );
+  const [playerObjects, setPlayerObjects] = useState([]);
 
   const [currentPlayer, setCurrentPlayer] = useState(playerObjects[0] ?? null);
+
+  function handleStartGame() {
+    const gamePlayers = playersList.map((player) => ({
+      name: player,
+      scores: [],
+    }));
+
+    setPlayerObjects(gamePlayers);
+    setCurrentPlayer(gamePlayers[0] ?? null);
+    setCurrentPage("game");
+  }
+
+  function handleAddScore(ballValue) {
+    if (!currentPlayer) return;
+
+    const updatedPlayer = {
+      ...currentPlayer,
+      scores: [...currentPlayer.scores, ballValue],
+    };
+
+    setPlayerObjects((players) =>
+      players.map((player) =>
+        player.name === currentPlayer.name ? updatedPlayer : player,
+      ),
+    );
+
+    setCurrentPlayer(updatedPlayer);
+  }
 
   function handleSetCurrentPlayer(playerObject) {
     setCurrentPlayer(playerObject);
@@ -89,7 +111,10 @@ function App() {
           {currentPage === "game" && (
             <>
               <PlayerDetails player={currentPlayer} />
-              <GameGrid />
+              <GameGrid
+                currentPlayer={currentPlayer}
+                onAddScore={handleAddScore}
+              />
               <SwitchPlayer
                 currentPlayer={currentPlayer}
                 playerObjects={playerObjects}
@@ -114,12 +139,7 @@ function App() {
             {currentPage === "order" && (
               <button
                 className="text-sm font-medium text-black"
-                onClick={() => {
-                  if (playerObjects.length === 0) return;
-
-                  setCurrentPlayer(playerObjects[0]);
-                  setCurrentPage("game");
-                }}
+                onClick={handleStartGame}
               >
                 Start Game
               </button>
@@ -134,7 +154,16 @@ function App() {
 
 function PlayerDetails({ player }) {
   console.log("Player Details: ", player);
-  return <div>{player?.name}</div>;
+  return (
+    <div className="w-[80%] flex justify-center mx-auto bg-blue-100 rounded-sm py-5">
+      <div className="text-center">
+        <p className="text-xl">{player?.name}</p>
+        <p className="text-5xl font-semibold">
+          {player?.scores.reduce((sum, num) => sum + num, 0)}
+        </p>
+      </div>
+    </div>
+  );
 }
 
 function SwitchPlayer({ playerObjects, currentPlayer, onSetCurrentPlayer }) {
@@ -174,37 +203,18 @@ function SwitchPlayer({ playerObjects, currentPlayer, onSetCurrentPlayer }) {
   );
 }
 
-function PButton({ children }) {
-  return <div className="text-2xl bg-pink-400 p-2 rounded-sm">{children}</div>;
-}
-
-function GameGrid() {
+function GameGrid({ currentPlayer, onAddScore }) {
   const [alt, setAlt] = useState(false);
-
   const [balls, setBalls] = useState(initialBalls);
 
-  console.log(balls);
-
   function handleDisableBall(number) {
-    console.log("disable ball reached");
-
-    console.log("Balls from disabling: ", balls);
-
-    balls.forEach((ball) => {
-      console.log(ball);
-      if (ball.disabled) {
-        console.log(`${ball.ballValue} is already disabled`);
-      }
-    });
+    onAddScore(number);
 
     setBalls((balls) =>
       balls.map((ball) =>
         ball.ballValue === number ? { ...ball, disabled: true } : ball,
       ),
     );
-
-    console.log("disable ball completed");
-    console.log(balls);
   }
 
   function handleAlt() {
@@ -212,7 +222,7 @@ function GameGrid() {
     console.log(alt);
   }
   return (
-    <div className="grid grid-cols-3 gap-2 mx-auto w-[80%]">
+    <div className="grid grid-cols-3 gap-2 mx-auto w-[80%] mt-6">
       {balls.map((ball) => (
         <SnookerBall
           onDisableBall={handleDisableBall}
@@ -246,7 +256,7 @@ function SnookerBall({ balls, disabled, alt, number, onDisableBall }) {
       disabled={disabled}
       readOnly
       onClick={handleClick}
-      className={`h-20 w-20 bg-blue-500 ${disabled ? "bg-blue-100" : "bg-blue-400"} text-center cursor-pointer text-3xl text-white rounded-full`}
+      className={`h-20 w-20 bg-blue-500 ${disabled ? "bg-red-200/50" : "bg-blue-400"} text-center cursor-pointer text-3xl text-white rounded-full`}
     />
   );
 }
