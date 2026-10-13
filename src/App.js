@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const initialBalls = [
   { ballValue: 1, disabled: false },
   { ballValue: 2, disabled: false },
@@ -21,6 +21,21 @@ function App() {
   const [playersList, setPlayersList] = useState([]);
   const [currentPage, setCurrentPage] = useState("players");
 
+  const playerObjects = playersList.map((player) => ({
+    name: player,
+    scores: [],
+  }));
+
+  // const [playerObjects, setPlayerObjects] = useState(
+  //   playersList.map((player) => ({ name: player, scores: [] })),
+  // );
+
+  const [currentPlayer, setCurrentPlayer] = useState(playerObjects[0] ?? null);
+
+  function handleSetCurrentPlayer(playerObject) {
+    setCurrentPlayer(playerObject);
+  }
+
   function handleAddPlayer(playerName) {
     if (playersList.includes(playerName)) {
       alert("Player already added");
@@ -35,6 +50,13 @@ function App() {
       players.filter((player) => player !== playerName),
     );
     console.log(playersList);
+  }
+
+  function handlePlayingOrder(playingOrder) {
+    console.log("Handle Playing Order called");
+    console.log("Received Playing Order: ", playingOrder);
+    setPlayersList(playingOrder);
+    console.log("updated order: ", playersList);
   }
 
   return (
@@ -58,12 +80,21 @@ function App() {
               <h3 className="font-semibold text-center text-lg">
                 Playing Order 🎱
               </h3>
-              <PlayingOrder players={playersList} />
+              <PlayingOrder
+                players={playersList}
+                onSetPlayingOrder={handlePlayingOrder}
+              />
             </>
           )}
           {currentPage === "game" && (
             <>
+              <PlayerDetails player={currentPlayer} />
               <GameGrid />
+              <SwitchPlayer
+                currentPlayer={currentPlayer}
+                playerObjects={playerObjects}
+                onSetCurrentPlayer={handleSetCurrentPlayer}
+              />
             </>
           )}
         </main>
@@ -83,7 +114,12 @@ function App() {
             {currentPage === "order" && (
               <button
                 className="text-sm font-medium text-black"
-                onClick={() => setCurrentPage("game")}
+                onClick={() => {
+                  if (playerObjects.length === 0) return;
+
+                  setCurrentPlayer(playerObjects[0]);
+                  setCurrentPage("game");
+                }}
               >
                 Start Game
               </button>
@@ -96,13 +132,71 @@ function App() {
   );
 }
 
+function PlayerDetails({ player }) {
+  console.log("Player Details: ", player);
+  return <div>{player?.name}</div>;
+}
+
+function SwitchPlayer({ playerObjects, currentPlayer, onSetCurrentPlayer }) {
+  function handleNextPlayer() {
+    if (playerObjects.length === 0) return;
+
+    const currentIndex = playerObjects.findIndex(
+      (player) => player.name === currentPlayer?.name,
+    );
+
+    const nextIndex =
+      currentIndex === -1 ? 0 : (currentIndex + 1) % playerObjects.length;
+
+    onSetCurrentPlayer(playerObjects[nextIndex]);
+  }
+
+  function handlePreviousPlayer() {
+    if (playerObjects.length === 0) return;
+
+    const currentIndex = playerObjects.findIndex(
+      (player) => player.name === currentPlayer?.name,
+    );
+
+    const previousIndex =
+      currentIndex === -1
+        ? playerObjects.length - 1
+        : (currentIndex - 1 + playerObjects.length) % playerObjects.length;
+
+    onSetCurrentPlayer(playerObjects[previousIndex]);
+  }
+
+  return (
+    <div className="w-[80%] flex justify-between mx-auto">
+      <button onClick={handlePreviousPlayer}>Prev</button>
+      <button onClick={handleNextPlayer}>Next</button>
+    </div>
+  );
+}
+
+function PButton({ children }) {
+  return <div className="text-2xl bg-pink-400 p-2 rounded-sm">{children}</div>;
+}
+
 function GameGrid() {
   const [alt, setAlt] = useState(false);
 
   const [balls, setBalls] = useState(initialBalls);
 
+  console.log(balls);
+
   function handleDisableBall(number) {
     console.log("disable ball reached");
+
+    console.log("Balls from disabling: ", balls);
+
+    balls.forEach((ball) => {
+      console.log(ball);
+      if (ball.disabled) {
+        console.log(`${ball.ballValue} is already disabled`);
+      }
+    });
+
     setBalls((balls) =>
       balls.map((ball) =>
         ball.ballValue === number ? { ...ball, disabled: true } : ball,
@@ -152,7 +246,7 @@ function SnookerBall({ balls, disabled, alt, number, onDisableBall }) {
       disabled={disabled}
       readOnly
       onClick={handleClick}
-      className={`h-20 w-20 bg-blue-500 ${disabled ? "bg-blue-200" : ""} text-center cursor-pointer text-3xl text-white rounded-full`}
+      className={`h-20 w-20 bg-blue-500 ${disabled ? "bg-blue-100" : "bg-blue-400"} text-center cursor-pointer text-3xl text-white rounded-full`}
     />
   );
 }
@@ -162,69 +256,6 @@ function Header() {
     <header className="border-b border-gray-100 px-5 py-4">
       <h1 className="text-xl font-semibold text-gray-900">Snooker Ug</h1>
     </header>
-  );
-}
-
-function PlayingOrder({ players }) {
-  const [playerOrder, setPlayerOrder] = useState(players);
-  const defaultOrder = players;
-
-  //Fisher-Yates shuffle
-  function shuffleArray(array) {
-    const shuffled = [...array];
-
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-
-    return shuffled;
-  }
-
-  function shufflePlayers() {
-    let players = playerOrder;
-    let newOrder = shuffleArray(players);
-    setPlayerOrder((prev) => newOrder);
-  }
-
-  function restoreOrder() {
-    setPlayerOrder((prev) => defaultOrder);
-  }
-
-  return (
-    <>
-      <ul className=" w-fit mx-auto">
-        {playerOrder.map((player, index) => (
-          <li className="text-lg mt-2 bg-pink-200 rounded-sm px-2 py-1">
-            {index + 1}. {player.charAt(0).toUpperCase() + player.slice(1)}
-          </li>
-        ))}
-      </ul>
-      <div className="flex flex-col items-center w-full">
-        <button
-          onClick={shufflePlayers}
-          className="mt-10 bg-blue-500 px-2 py-1 round-sm  w-32 text-white"
-        >
-          Shuffle Players
-        </button>
-        <button
-          disabled={
-            playerOrder.length === defaultOrder.length &&
-            playerOrder.every((value, index) => value === defaultOrder[index])
-          }
-          onClick={restoreOrder}
-          className={`${
-            playerOrder.length === defaultOrder.length &&
-            playerOrder.every((value, index) => value === defaultOrder[index])
-              ? "bg-green-200"
-              : "bg-green-500"
-          } mt-5 px-2 py-1 round-sm  w-32 text-white`}
-        >
-          Default Order
-        </button>
-      </div>
-    </>
   );
 }
 
@@ -246,6 +277,7 @@ function PlayerTag({ name, onDeletePlayer }) {
     </div>
   );
 }
+
 function PlayerInput({ onAddPlayer }) {
   const [playerName, setPlayerName] = useState("");
 
@@ -274,6 +306,75 @@ function PlayerInput({ onAddPlayer }) {
         Add
       </button>
     </form>
+  );
+}
+
+function PlayingOrder({ players, onSetPlayingOrder }) {
+  const [playerOrder, setPlayerOrder] = useState(players);
+  const [defaultOrder] = useState(() => [...players]);
+
+  //Fisher-Yates shuffle
+  function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+  }
+
+  function shufflePlayers() {
+    const newOrder = shuffleArray(playerOrder);
+    setPlayerOrder(newOrder);
+    onSetPlayingOrder(newOrder);
+  }
+
+  function restoreOrder() {
+    const originalOrder = [...defaultOrder];
+
+    setPlayerOrder(originalOrder);
+    onSetPlayingOrder(originalOrder);
+  }
+
+  return (
+    <>
+      <ul className=" w-fit mx-auto">
+        {playerOrder.map((player, index) => (
+          <li
+            className="text-lg mt-2 bg-pink-200 rounded-sm px-2 py-1"
+            key={index}
+          >
+            {index + 1}. {player.charAt(0).toUpperCase() + player.slice(1)}
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-col items-center w-full">
+        <button
+          onClick={shufflePlayers}
+          className="mt-10 bg-blue-500 px-2 py-1 round-sm  w-32 text-white"
+        >
+          Shuffle Players
+        </button>
+        <button
+          disabled={
+            playerOrder.length === defaultOrder.length &&
+            playerOrder.every((value, index) => value === defaultOrder[index])
+          }
+          onClick={restoreOrder}
+          className={`${
+            playerOrder.length === defaultOrder.length &&
+            playerOrder.every((value, index) => value === defaultOrder[index])
+              ? "bg-green-200"
+              : "bg-green-500"
+          } mt-5 px-2 py-1 round-sm  w-32 text-white`}
+        >
+          Default Order
+        </button>
+      </div>
+    </>
   );
 }
 
