@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { initialBalls } from "../data/initialBalls";
 import SnookerBall from "./SnookerBall";
 
-function GameGrid({ currentPlayer, onAddScore }) {
+function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
   const [alt, setAlt] = useState(false);
   const [balls, setBalls] = useState(initialBalls);
+  const [highestScore, setHighestScore] = useState(0);
+
+  useEffect(() => {
+    checkPlayersStatus();
+  }, [playerObjects, balls]);
 
   function handleDisableBall(number) {
     onAddScore(number);
@@ -15,6 +20,38 @@ function GameGrid({ currentPlayer, onAddScore }) {
         ball.ballValue === number ? { ...ball, disabled: true } : ball,
       ),
     );
+  }
+
+  function checkPlayersStatus() {
+    const ballsLeft = balls.filter((ball) => !ball.disabled);
+
+    const scoreLeft = ballsLeft.reduce((sum, ball) => sum + ball.ballValue, 0);
+
+    let highest = 0;
+
+    console.log(playerObjects);
+
+    for (const player of playerObjects) {
+      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
+
+      console.log(playerScore);
+
+      if (playerScore > highest) {
+        highest = playerScore;
+      }
+    }
+
+    setHighestScore(highest);
+
+    console.log("Highest Score: ", highest);
+
+    for (const player of playerObjects) {
+      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
+
+      if (playerScore + scoreLeft < highestScore) {
+        alert(`${player.name} has been eliminated`);
+      }
+    }
   }
 
   function handleAlt() {

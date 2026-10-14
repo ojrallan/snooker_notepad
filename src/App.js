@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import GameGrid from "./components/game/GameGrid";
 import PlayerDisplay from "./components/players/PlayerDisplay";
@@ -102,6 +102,7 @@ function App() {
               <PlayerDetails player={currentPlayer} />
               <GameGrid
                 currentPlayer={currentPlayer}
+                playerObjects={playerObjects}
                 onAddScore={handleAddScore}
               />
               <SwitchPlayer
