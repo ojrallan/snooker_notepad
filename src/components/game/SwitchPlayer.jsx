@@ -28,9 +28,20 @@ function SwitchPlayer({ playerObjects, currentPlayer, onSetCurrentPlayer }) {
   }
 
   return (
-    <div className="w-[90%] flex justify-between mx-auto shadow-md py-2 px-2">
-      <button onClick={handlePreviousPlayer}>Prev</button>
-      <button onClick={handleNextPlayer}>Next</button>
+    <div className="mx-auto flex w-[90%] justify-between px-2 py-1 shadow-md">
+      <button
+        onClick={handlePreviousPlayer}
+        className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium active:bg-gray-200"
+      >
+        Prev
+      </button>
+
+      <button
+        onClick={handleNextPlayer}
+        className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium active:bg-gray-200"
+      >
+        Next
+      </button>
     </div>
   );
 }

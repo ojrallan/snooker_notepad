@@ -12,12 +12,17 @@ export default function SnookerBall({
   }
 
   return (
-    <input
-      value={alt ? -number : number}
-      disabled={disabled}
-      readOnly
-      onClick={handleClick}
-      className={`h-20 w-20 bg-blue-500 ${disabled ? "bg-red-200/50" : "bg-blue-400"} text-center cursor-pointer text-3xl text-white rounded-full`}
-    />
+  
+<input
+  type="button"
+  value={alt ? -number : number}
+  disabled={disabled}
+  readOnly
+  onClick={handleClick}
+  className={`h-16 w-16 appearance-none rounded-full text-center text-2xl text-white cursor-pointer ${
+    disabled ? "bg-red-200/50" : "bg-blue-400"
+  }`}
+/>
+
   );
 }

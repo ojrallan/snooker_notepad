@@ -60,34 +60,44 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
     setAlt((prev) => !prev);
   }
   return (
-    <>
-      <div className="w-[90%] mx-auto text-center mt-2 font-semibold">Highest: {highestScore}</div>
-      <div className="grid grid-cols-3 gap-2 mx-auto w-[90%] mt-6 shadow-md px-2 py-2">
-        {balls.map((ball) => (
-          <SnookerBall
-            onDisableBall={handleDisableBall}
-            number={ball.ballValue}
-            key={ball.ballValue}
-            disabled={ball.disabled}
-            alt={alt}
-          />
-        ))}
-      </div>
-      <div className=" w-[80%] flex mx-auto mt-2 border-2 py-2 rounded-md shadow-md">
-        <div
-          className="flex items-center justify-center cursor-pointer mx-auto bg-green-500 w-20 h-20 rounded-full text-white"
-          onClick={handleAlt}
-        >
-          Alt
-        </div>
-        <div
-          className="flex items-center justify-center cursor-pointer mx-auto bg-pink-500 w-20 h-20 rounded-full text-white font-bold text-3xl"
-          onClick={handlePenalty}
-        >
-          -1
-        </div>
-      </div>
-    </>
+   
+<>
+  {/* Highest score */}
+  <div className="mx-auto mt-1 w-[90%] text-center font-semibold">
+    Highest: {highestScore}
+  </div>
+
+  {/* Snooker balls */}
+  <div className="mx-auto mt-3 grid w-[90%] grid-cols-3 gap-2 px-2 py-1 shadow-md justify-items-center ">
+    {balls.map((ball) => (
+      <SnookerBall
+        onDisableBall={handleDisableBall}
+        number={ball.ballValue}
+        key={ball.ballValue}
+        disabled={ball.disabled}
+        alt={alt}
+      />
+    ))}
+  </div>
+
+  {/* Action buttons */}
+  <div className="mx-auto mt-2 flex w-[80%] items-center justify-around rounded-md border-2 py-2 shadow-md">
+    <div
+      className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-green-500 text-white"
+      onClick={handleAlt}
+    >
+      Alt
+    </div>
+
+    <div
+      className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-pink-500 text-2xl font-bold text-white"
+      onClick={handlePenalty}
+    >
+      -1
+    </div>
+  </div>
+</>
+
   );
 }
 

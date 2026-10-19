@@ -70,12 +70,14 @@ function App() {
   }
 
   return (
-    <div className="max-h-screen bg-gray-100 w-full max-w-[430px]">
-      <div className="mx-auto flex min-h-screen  flex-col bg-white">
+    <div className="h-dvh w-full max-w-[430px] mx-auto overflow-hidden border-2 border-black bg-gray-100 flex flex-col">
+      {/* Main app container */}
+      <div className="flex flex-1 min-h-0 flex-col bg-white">
         {/* Header */}
         <Header />
+
         {/* Content */}
-        <main className="flex-1 px-5 py-6">
+        <main className="flex-1 min-h-0 px-5 py-3 overflow-hidden">
           {currentPage === "players" && (
             <>
               <PlayerDisplay
@@ -86,11 +88,13 @@ function App() {
               <PlayerInput onAddPlayer={handleAddPlayer} />
             </>
           )}
+
           {currentPage === "order" && (
             <>
-              <h3 className="font-semibold text-center text-lg">
+              <h3 className="text-center text-lg font-semibold">
                 Playing Order 🎱
               </h3>
+
               <PlayingOrder
                 players={playersList}
                 onSetPlayingOrder={handlePlayingOrder}
@@ -98,24 +102,29 @@ function App() {
             </>
           )}
           {currentPage === "game" && (
-            <>
+            <div className="flex h-full min-h-0 flex-col justify-between">
+              {/* Top */}
               <PlayerDetails player={currentPlayer} />
+
+              {/* Middle */}
               <GameGrid
                 currentPlayer={currentPlayer}
                 playerObjects={playerObjects}
                 onAddScore={handleAddScore}
               />
+
+              {/* Bottom */}
               <SwitchPlayer
                 currentPlayer={currentPlayer}
                 playerObjects={playerObjects}
                 onSetCurrentPlayer={handleSetCurrentPlayer}
               />
-            </>
+            </div>
           )}
         </main>
 
         {/* Bottom navigation */}
-        <nav className="border-t border-gray-100 bg-white px-5 py-3">
+        <nav className="shrink-0 border-t border-gray-100 bg-white px-5 py-3">
           <div className="flex items-center justify-around">
             {currentPage === "players" && (
               <button
@@ -134,7 +143,6 @@ function App() {
                 Start Game
               </button>
             )}
-            {/* <button className="text-sm font-medium text-black">Home</button> */}
           </div>
         </nav>
       </div>
