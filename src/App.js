@@ -70,7 +70,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 w-full max-w-[430px]">
+    <div className="max-h-screen bg-gray-100 w-full max-w-[430px]">
       <div className="mx-auto flex min-h-screen  flex-col bg-white">
         {/* Header */}
         <Header />

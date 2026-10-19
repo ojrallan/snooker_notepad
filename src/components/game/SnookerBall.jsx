@@ -1,8 +1,14 @@
-export default function SnookerBall({ balls, disabled, alt, number, onDisableBall }) {
+export default function SnookerBall({
+  balls,
+  disabled,
+  alt,
+  number,
+  onDisableBall,
+}) {
   function handleClick() {
-    if (alt) return;
+    if (disabled) alert("Ball already potted");
 
-    onDisableBall(number);
+    alt ? onDisableBall(-number) : onDisableBall(number);
   }
 
   return (

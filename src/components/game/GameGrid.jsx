@@ -13,6 +13,10 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
   }, [playerObjects, balls]);
 
   function handleDisableBall(number) {
+    console.log("Alt: ", alt);
+
+    console.log(number);
+
     onAddScore(number);
 
     setBalls((balls) =>
@@ -20,6 +24,10 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
         ball.ballValue === number ? { ...ball, disabled: true } : ball,
       ),
     );
+  }
+
+  function handlePenalty() {
+    onAddScore(-1);
   }
 
   function checkPlayersStatus() {
@@ -56,27 +64,35 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
 
   function handleAlt() {
     setAlt((prev) => !prev);
-    console.log(alt);
   }
   return (
-    <div className="grid grid-cols-3 gap-2 mx-auto w-[80%] mt-6">
-      {balls.map((ball) => (
-        <SnookerBall
-          onDisableBall={handleDisableBall}
-          number={ball.ballValue}
-          key={ball.ballValue}
-          disabled={ball.disabled}
-          alt={alt}
-        />
-      ))}
-
-      <div
-        className="flex items-center justify-center cursor-pointer mx-auto bg-green-500 w-20 h-20 rounded-full text-white"
-        onClick={handleAlt}
-      >
-        Alt
+    <>
+      <div className="grid grid-cols-3 gap-2 mx-auto w-[90%] mt-6 shadow-md px-2 py-2">
+        {balls.map((ball) => (
+          <SnookerBall
+            onDisableBall={handleDisableBall}
+            number={ball.ballValue}
+            key={ball.ballValue}
+            disabled={ball.disabled}
+            alt={alt}
+          />
+        ))}
       </div>
-    </div>
+      <div className=" w-[80%] flex mx-auto mt-2 border-2 py-2 rounded-md shadow-md">
+        <div
+          className="flex items-center justify-center cursor-pointer mx-auto bg-green-500 w-20 h-20 rounded-full text-white"
+          onClick={handleAlt}
+        >
+          Alt
+        </div>
+        <div
+          className="flex items-center justify-center cursor-pointer mx-auto bg-pink-500 w-20 h-20 rounded-full text-white font-bold text-3xl"
+          onClick={handlePenalty}
+        >
+          -1
+        </div>
+      </div>
+    </>
   );
 }
 

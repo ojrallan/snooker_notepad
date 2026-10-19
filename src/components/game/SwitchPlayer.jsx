@@ -28,7 +28,7 @@ function SwitchPlayer({ playerObjects, currentPlayer, onSetCurrentPlayer }) {
   }
 
   return (
-    <div className="w-[80%] flex justify-between mx-auto">
+    <div className="w-[90%] flex justify-between mx-auto shadow-md py-2 px-2">
       <button onClick={handlePreviousPlayer}>Prev</button>
       <button onClick={handleNextPlayer}>Next</button>
     </div>
