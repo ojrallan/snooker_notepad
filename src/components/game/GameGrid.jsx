@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { initialBalls } from "../data/initialBalls";
 import SnookerBall from "./SnookerBall";
@@ -8,9 +8,35 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
   const [balls, setBalls] = useState(initialBalls);
   const [highestScore, setHighestScore] = useState(0);
 
+  const checkPlayersStatus = useCallback(() => {
+    const ballsLeft = balls.filter((ball) => !ball.disabled);
+
+    const scoreLeft = ballsLeft.reduce((sum, ball) => sum + ball.ballValue, 0);
+
+    let highest = 0;
+
+    for (const player of playerObjects) {
+      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
+
+      if (playerScore > highest) {
+        highest = playerScore;
+      }
+    }
+
+    setHighestScore(highest);
+
+    for (const player of playerObjects) {
+      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
+
+      if (playerScore + scoreLeft < highest) {
+        alert(`${player.name} has been eliminated`);
+      }
+    }
+  }, [balls, playerObjects]);
+
   useEffect(() => {
     checkPlayersStatus();
-  }, [playerObjects, balls]);
+  }, [checkPlayersStatus]);
 
   function handleDisableBall(number) {
     console.log("Alt: ", alt);
@@ -28,38 +54,6 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
 
   function handlePenalty() {
     onAddScore(-1);
-  }
-
-  function checkPlayersStatus() {
-    const ballsLeft = balls.filter((ball) => !ball.disabled);
-
-    const scoreLeft = ballsLeft.reduce((sum, ball) => sum + ball.ballValue, 0);
-
-    let highest = 0;
-
-    console.log(playerObjects);
-
-    for (const player of playerObjects) {
-      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
-
-      console.log(playerScore);
-
-      if (playerScore > highest) {
-        highest = playerScore;
-      }
-    }
-
-    setHighestScore(highest);
-
-    console.log("Highest Score: ", highest);
-
-    for (const player of playerObjects) {
-      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
-
-      if (playerScore + scoreLeft < highestScore) {
-        alert(`${player.name} has been eliminated`);
-      }
-    }
   }
 
   function handleAlt() {
