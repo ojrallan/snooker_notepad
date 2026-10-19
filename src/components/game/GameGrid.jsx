@@ -61,6 +61,7 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
   }
   return (
     <>
+      <div className="w-[90%] mx-auto text-center mt-2 font-semibold">Highest: {highestScore}</div>
       <div className="grid grid-cols-3 gap-2 mx-auto w-[90%] mt-6 shadow-md px-2 py-2">
         {balls.map((ball) => (
           <SnookerBall
