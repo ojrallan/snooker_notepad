@@ -60,44 +60,53 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
     setAlt((prev) => !prev);
   }
   return (
-   
-<>
-  {/* Highest score */}
-  <div className="mx-auto mt-1 w-[90%] text-center font-semibold">
-    Highest: {highestScore}
-  </div>
+    <>
+      {/* Highest score */}
+      <div className="mx-auto mt-1 w-[90%] text-center font-semibold">
+        Highest: {highestScore}
+      </div>
 
-  {/* Snooker balls */}
-  <div className="mx-auto mt-3 grid w-[90%] grid-cols-3 gap-2 px-2 py-1 shadow-md justify-items-center ">
-    {balls.map((ball) => (
-      <SnookerBall
-        onDisableBall={handleDisableBall}
-        number={ball.ballValue}
-        key={ball.ballValue}
-        disabled={ball.disabled}
-        alt={alt}
-      />
-    ))}
-  </div>
+      {/* Snooker balls */}
+      <div className="mx-auto mt-3 grid w-[90%] grid-cols-3 gap-2 px-2 py-1 shadow-md justify-items-center bg-slate-800">
+        {balls.map((ball) => (
+          <SnookerBall
+            onDisableBall={handleDisableBall}
+            number={ball.ballValue}
+            key={ball.ballValue}
+            disabled={ball.disabled}
+            alt={alt}
+          />
+        ))}
+      </div>
 
-  {/* Action buttons */}
-  <div className="mx-auto mt-2 flex w-[80%] items-center justify-around rounded-md border-2 py-2 shadow-md">
-    <div
-      className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-green-500 text-white"
-      onClick={handleAlt}
-    >
-      Alt
-    </div>
+      {/* Action buttons */}
+      <div className="mx-auto mt-2 flex w-[90%] items-center justify-around rounded-md border-2 py-2 shadow-md bg-slate-800">
+        <div
+          className="flex flex-col h-16 w-32 cursor-pointer items-center justify-center  bg-slate-500 text-white"
+          onClick={handleAlt}
+        >
+          <div>
+            {" "}
+            <p> Alt</p>
+          </div>
+          <div>
+            <p>{alt ? "[ON]" : "[OFF]"}</p>
+          </div>
+        </div>
 
-    <div
-      className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-pink-500 text-2xl font-bold text-white"
-      onClick={handlePenalty}
-    >
-      -1
-    </div>
-  </div>
-</>
-
+        <div
+          className="flex h-16 w-32 cursor-pointer items-center justify-center bg-red-500 text-2xl font-bold text-white"
+          onClick={handlePenalty}
+        >
+          -1
+          {/* <img
+            src="/images/balls/minus.png"
+            alt="cue_ball"
+            className="object-contain max-h-12 max-w-12"
+          /> */}
+        </div>
+      </div>
+    </>
   );
 }
 
