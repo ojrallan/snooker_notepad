@@ -28,19 +28,19 @@ function SwitchPlayer({ playerObjects, currentPlayer, onSetCurrentPlayer }) {
   }
 
   return (
-    <div className="mx-auto flex w-[90%] justify-between px-2 py-1 shadow-md">
+    <div className="mx-auto flex w-[90%] justify-between gap-3 rounded-xl border border-[#293646] bg-[#151E29] px-3 py-3">
       <button
         onClick={handlePreviousPlayer}
-        className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium active:bg-gray-200"
+        className="flex-1 rounded-lg border border-[#293646] bg-[#1D2937] px-4 py-3 text-sm font-semibold text-[#F4F5F6] transition hover:bg-[#293646] active:scale-95"
       >
-        Prev
+        ← Previous
       </button>
 
       <button
         onClick={handleNextPlayer}
-        className="rounded-md bg-gray-100 px-4 py-2 text-sm font-medium active:bg-gray-200"
+        className="flex-1 rounded-lg bg-[#D6A84B] px-4 py-3 text-sm font-bold text-[#0B1018] transition hover:bg-[#E5BC68] active:scale-95"
       >
-        Next
+        Next →
       </button>
     </div>
   );

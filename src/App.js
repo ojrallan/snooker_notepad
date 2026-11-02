@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 import GameGrid from "./components/game/GameGrid";
@@ -70,14 +71,17 @@ function App() {
   }
 
   return (
-    <div className="h-dvh w-full max-w-[430px] mx-auto overflow-hidden border-2 border-black bg-gray-100 flex flex-col">
+    <div className="h-dvh w-full max-w-[430px] mx-auto overflow-hidden border-2 border-[#293646] bg-[#0B1018] flex flex-col">
+
       {/* Main app container */}
-      <div className="flex flex-1 min-h-0 flex-col bg-white">
+      <div className="flex flex-1 min-h-0 flex-col bg-[#0B1018]">
+
         {/* Header */}
         <Header />
 
         {/* Content */}
-        <main className="flex-1 min-h-0 px-5 py-3 overflow-hidden">
+        <main className="flex-1 min-h-0 px-5 py-3 overflow-hidden bg-[#0B1018] text-[#F4F5F6]">
+
           {currentPage === "players" && (
             <>
               <PlayerDisplay
@@ -91,7 +95,7 @@ function App() {
 
           {currentPage === "order" && (
             <>
-              <h3 className="text-center text-lg font-semibold">
+              <h3 className="text-center text-lg font-semibold text-[#F4F5F6]">
                 Playing Order 🎱
               </h3>
 
@@ -101,8 +105,10 @@ function App() {
               />
             </>
           )}
+
           {currentPage === "game" && (
             <div className="flex h-full min-h-0 flex-col justify-between">
+
               {/* Top */}
               <PlayerDetails player={currentPlayer} />
 
@@ -119,16 +125,19 @@ function App() {
                 playerObjects={playerObjects}
                 onSetCurrentPlayer={handleSetCurrentPlayer}
               />
+
             </div>
           )}
         </main>
 
         {/* Bottom navigation */}
-        <nav className="shrink-0 border-t border-gray-100 bg-white px-5 py-3">
+        <nav className="shrink-0 border-t border-[#293646] bg-[#151E29] px-5 py-3">
+
           <div className="flex items-center justify-around">
+
             {currentPage === "players" && (
               <button
-                className="text-sm font-medium text-black"
+                className="rounded-lg bg-[#D6A84B] px-6 py-2 text-sm font-bold text-[#0B1018] transition hover:bg-[#E5BC68]"
                 onClick={() => setCurrentPage("order")}
               >
                 Next
@@ -137,14 +146,16 @@ function App() {
 
             {currentPage === "order" && (
               <button
-                className="text-sm font-medium text-black"
+                className="rounded-lg bg-[#D6A84B] px-6 py-2 text-sm font-bold text-[#0B1018] transition hover:bg-[#E5BC68]"
                 onClick={handleStartGame}
               >
                 Start Game
               </button>
             )}
+
           </div>
         </nav>
+
       </div>
     </div>
   );

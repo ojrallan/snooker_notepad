@@ -11,24 +11,27 @@ function PlayerInput({ onAddPlayer }) {
       alert("Please enter a valid name");
       return;
     }
+
     onAddPlayer(name);
     console.log(playerName);
     setPlayerName("");
   }
+
   return (
     <form className="mt-10 flex justify-center gap-2" onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Enter Player name"
-        className="border py-1 px-1"
+        className="min-w-0 flex-1 rounded-lg border border-[#293646] bg-[#151E29] px-3 py-2 text-[#F4F5F6] placeholder:text-[#929EAC] outline-none focus:border-[#D6A84B]"
         onChange={(e) => setPlayerName(e.target.value)}
         value={playerName}
       />
-      <button className="bg-green-500 text-white px-2 py-1 rounded-sm">
+
+      <button className="rounded-lg bg-[#D6A84B] px-4 py-2 font-semibold text-[#0B1018] transition hover:bg-[#E5BC68]">
         Add
       </button>
     </form>
   );
 }
 
-export default PlayerInput
+export default PlayerInput;
