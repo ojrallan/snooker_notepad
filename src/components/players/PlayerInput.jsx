@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function PlayerInput({ onAddPlayer }) {
   const [playerName, setPlayerName] = useState("");
@@ -7,8 +8,9 @@ function PlayerInput({ onAddPlayer }) {
     e.preventDefault();
     const name = playerName.trim().split(" ")[0].toLowerCase();
 
-    if (!name) {
-      alert("Please enter a valid name");
+    if (!name || name.length < 3) {
+      // alert("Please enter a valid name");
+      toast.error("Please enter a valid name")
       return;
     }
 

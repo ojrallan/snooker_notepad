@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 import GameGrid from "./components/game/GameGrid";
 import PlayerDisplay from "./components/players/PlayerDisplay";
@@ -55,7 +56,7 @@ function App() {
 
   function handleAddPlayer(playerName) {
     if (playersList.includes(playerName)) {
-      alert("Player already added");
+      toast.error("Player already added");
       return;
     }
     setPlayersList((list) => [...list, playerName]);
@@ -78,6 +79,19 @@ function App() {
 
   return (
     <div className="h-dvh w-full max-w-[430px] mx-auto overflow-hidden border-2 border-[#293646] bg-[#0B1018] flex flex-col">
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 1500,
+          style: {
+            background: "#dcfce7",
+            color: "#151E29",
+            border: "1px solid #293646",
+            borderRadius: "12px",
+          },
+        }}
+      />
       {/* Main app container */}
       <div className="flex flex-1 min-h-0 flex-col bg-[#0B1018]">
         {/* Header */}

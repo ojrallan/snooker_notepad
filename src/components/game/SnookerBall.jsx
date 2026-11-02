@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 export default function SnookerBall({
   balls,
   disabled,
@@ -6,7 +8,7 @@ export default function SnookerBall({
   onDisableBall,
 }) {
   function handleClick() {
-    if (disabled) alert("Ball already potted");
+    if (disabled) toast.error("Ball already potted");
 
     alt ? onDisableBall(-number) : onDisableBall(number);
   }

@@ -1,5 +1,5 @@
-
 import { useState, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
 
 import { initialBalls } from "../data/initialBalls";
 import SnookerBall from "./SnookerBall";
@@ -12,18 +12,12 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
   const checkPlayersStatus = useCallback(() => {
     const ballsLeft = balls.filter((ball) => !ball.disabled);
 
-    const scoreLeft = ballsLeft.reduce(
-      (sum, ball) => sum + ball.ballValue,
-      0
-    );
+    const scoreLeft = ballsLeft.reduce((sum, ball) => sum + ball.ballValue, 0);
 
     let highest = 0;
 
     for (const player of playerObjects) {
-      const playerScore = player.scores.reduce(
-        (sum, score) => sum + score,
-        0
-      );
+      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
 
       if (playerScore > highest) {
         highest = playerScore;
@@ -33,13 +27,10 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
     setHighestScore(highest);
 
     for (const player of playerObjects) {
-      const playerScore = player.scores.reduce(
-        (sum, score) => sum + score,
-        0
-      );
+      const playerScore = player.scores.reduce((sum, score) => sum + score, 0);
 
       if (playerScore + scoreLeft < highest) {
-        alert(`${player.name} has been eliminated`);
+        toast(`${player.name} has been eliminated`);
       }
     }
   }, [balls, playerObjects]);
@@ -56,15 +47,14 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
 
     setBalls((balls) =>
       balls.map((ball) =>
-        ball.ballValue === number
-          ? { ...ball, disabled: true }
-          : ball
-      )
+        ball.ballValue === number ? { ...ball, disabled: true } : ball,
+      ),
     );
   }
 
   function handlePenalty() {
     onAddScore(-1);
+    toast.error("Penalty: -1 point")
   }
 
   function handleAlt() {
@@ -73,13 +63,10 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
 
   return (
     <div className="mx-auto flex w-full flex-col gap-2">
-
       {/* Compact highest score */}
       <div className="flex items-center justify-center gap-2 text-xs">
         <span className="text-[#929EAC]">Highest score:</span>
-        <span className="font-bold text-[#D6A84B]">
-          {highestScore}
-        </span>
+        <span className="font-bold text-[#D6A84B]">{highestScore}</span>
       </div>
 
       {/* Snooker balls */}
@@ -97,7 +84,6 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
 
       {/* Action buttons */}
       <div className="mx-auto flex w-[90%] items-center justify-around gap-3 rounded-xl border border-[#293646] bg-[#151E29] p-2">
-
         {/* Alt */}
         <button
           type="button"
@@ -109,9 +95,7 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
           }`}
         >
           ALT
-          <span className="text-[10px] font-medium">
-            {alt ? "ON" : "OFF"}
-          </span>
+          <span className="text-[10px] font-medium">{alt ? "ON" : "OFF"}</span>
         </button>
 
         {/* Penalty */}
@@ -122,7 +106,6 @@ function GameGrid({ currentPlayer, playerObjects, onAddScore }) {
         >
           -1
         </button>
-
       </div>
     </div>
   );
