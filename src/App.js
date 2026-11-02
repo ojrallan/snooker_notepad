@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import GameGrid from "./components/game/GameGrid";
 import PlayerDisplay from "./components/players/PlayerDisplay";
@@ -14,6 +13,13 @@ function App() {
   const [currentPage, setCurrentPage] = useState("players");
   const [playerObjects, setPlayerObjects] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(playerObjects[0] ?? null);
+
+  useEffect(() => {
+    for (let i = 1; i <= 15; i++) {
+      const img = new Image();
+      img.src = `/images/balls/ball_${i}.png`;
+    }
+  }, []);
 
   function handleStartGame() {
     const gamePlayers = playersList.map((player) => ({
@@ -72,16 +78,13 @@ function App() {
 
   return (
     <div className="h-dvh w-full max-w-[430px] mx-auto overflow-hidden border-2 border-[#293646] bg-[#0B1018] flex flex-col">
-
       {/* Main app container */}
       <div className="flex flex-1 min-h-0 flex-col bg-[#0B1018]">
-
         {/* Header */}
         <Header />
 
         {/* Content */}
         <main className="flex-1 min-h-0 px-5 py-3 overflow-hidden bg-[#0B1018] text-[#F4F5F6]">
-
           {currentPage === "players" && (
             <>
               <PlayerDisplay
@@ -108,7 +111,6 @@ function App() {
 
           {currentPage === "game" && (
             <div className="flex h-full min-h-0 flex-col justify-between">
-
               {/* Top */}
               <PlayerDetails player={currentPlayer} />
 
@@ -125,16 +127,13 @@ function App() {
                 playerObjects={playerObjects}
                 onSetCurrentPlayer={handleSetCurrentPlayer}
               />
-
             </div>
           )}
         </main>
 
         {/* Bottom navigation */}
         <nav className="shrink-0 border-t border-[#293646] bg-[#151E29] px-5 py-3">
-
           <div className="flex items-center justify-around">
-
             {currentPage === "players" && (
               <button
                 className="rounded-lg bg-[#D6A84B] px-6 py-2 text-sm font-bold text-[#0B1018] transition hover:bg-[#E5BC68]"
@@ -152,10 +151,8 @@ function App() {
                 Start Game
               </button>
             )}
-
           </div>
         </nav>
-
       </div>
     </div>
   );
